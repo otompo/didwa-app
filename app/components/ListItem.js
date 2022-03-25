@@ -19,6 +19,7 @@ function ListItem({
   title,
   image,
   subTitle,
+  subSubTitle,
   onPress,
   IconComponent,
   renderRightActions,
@@ -38,6 +39,11 @@ function ListItem({
               {subTitle && (
                 <AppText style={styles.subTitle} numberOfLines={2}>
                   {subTitle}
+                </AppText>
+              )}
+              {subSubTitle && (
+                <AppText style={styles.subSubTitle} numberOfLines={2}>
+                  {subSubTitle}
                 </AppText>
               )}
             </View>
@@ -74,6 +80,9 @@ const styles = StyleSheet.create({
   },
   subTitle: {
     color: colors.medium,
+  },
+  subSubTitle: {
+    color: colors.primary,
   },
   detailsContainer: {
     marginLeft: 10,

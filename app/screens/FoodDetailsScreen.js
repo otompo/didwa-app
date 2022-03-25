@@ -11,42 +11,22 @@ import {
 import AppText from "../components/AppText";
 import ListItem from "../components/ListItem";
 import colors from "../config/colors";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Divider } from "react-native-elements";
 import SubmitButton from "../components/SubmitButton";
 import AppTextInput from "../components/auth/AppTextInput";
-import { FoodContext } from "../context/foodContext";
-import Card from "../components/Card";
 import { AuthContext } from "../context/authContext";
 
 function FoodDetailsScreen({ route, navigation }) {
   const foods = route.params;
-  //   const [food, setFood] = useState({});
-  const [mills, setMills] = useContext(FoodContext);
   const [loading, setLoading] = useState(false);
   const [state, setState] = useContext(AuthContext);
   const [qty, setQty] = useState("1");
   const [amount, setAmount] = useState("");
   const authenticated = state && state.token !== "" && state.user !== null;
 
-  // console.log(foods._id);
-  useEffect(async () => {
-    await AsyncStorage.setItem("food", JSON.stringify(foods));
-    setMills(foods);
-    setAmount(qty * mills.price);
-  }, [foods.slug, qty, mills.price]);
-
-  //   const loadSingleFood = async () => {
-  //     try {
-  //       setLoading(true);
-  //       const { data } = await axios.get(`/food/${foods.slug}`);
-  //       setFood(data);
-  //       setLoading(false);
-  //     } catch (err) {
-  //       console.log(err);
-  //       setLoading(false);
-  //     }
-  //   };
+  useEffect(() => {
+    setAmount(qty * foods.price);
+  }, [foods.slug, qty, foods.price]);
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -64,7 +44,7 @@ function FoodDetailsScreen({ route, navigation }) {
 
     try {
       const { data } = await axios.post(`/food/order`, {
-        restaurant: foods.restaurant.name,
+        restaurant: foods.restaurant._id,
         food: foods._id,
         amount,
         qty,
@@ -80,14 +60,13 @@ function FoodDetailsScreen({ route, navigation }) {
   };
   return (
     <View style={{ flex: 1 }}>
-      {/* <Text>{JSON.stringify(mills, null, 4)}</Text> */}
       <Image style={styles.image} source={{ uri: foods.image.url }} />
       <ScrollView style={styles.Contain} showsVerticalScrollIndicator={false}>
         <View style={styles.detailsContain}>
-          <AppText style={styles.title}>{mills.name}</AppText>
+          <AppText style={styles.title}>{foods.name}</AppText>
 
           <AppText style={styles.price}>
-            <Text>GHC</Text> {mills.price}
+            <Text>GHC</Text> {foods.price}
             <Text>.00</Text>
           </AppText>
           <Divider width={1} />
@@ -107,7 +86,7 @@ function FoodDetailsScreen({ route, navigation }) {
           </View>
           <View>
             <Text style={{ color: colors.danger }}>
-              Amount to Pay: GHC {qty * mills.price}.00
+              Amount to Pay: GHC {qty * foods.price}.00
             </Text>
           </View>
           {authenticated ? (
@@ -133,7 +112,7 @@ function FoodDetailsScreen({ route, navigation }) {
             renderItem={({ item }) => (
               <AppText
                 style={styles.categoryText}
-                onPress={() => console.log(item)}
+                onPress={() => navigation.navigate("CategoryDetails", item)}
               >
                 {" "}
                 {item.title}

@@ -56,6 +56,6 @@ const styles = StyleSheet.create({
 
   bannerImage: {
     width: "100%",
-    height: height / 3,
+    height: 210,
   },
 });

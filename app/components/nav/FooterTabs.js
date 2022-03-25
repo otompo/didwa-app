@@ -51,11 +51,12 @@ function FooterTabs() {
           icon="silverware-variant"
           screenName="Restaurants"
           routeName={route.name}
-          handlePress={
-            authenticated
-              ? () => navigation.navigate("Restaurants")
-              : () => navigation.navigate("Signin")
-          }
+          handlePress={() => navigation.navigate("Restaurants")}
+          // handlePress={
+          //   authenticated
+          //     ? () => navigation.navigate("Restaurants")
+          //     : () => navigation.navigate("Signin")
+          // }
         />
 
         {/* <Badge value="3" status="error" containerStyle={styles.badgeStyle} /> */}

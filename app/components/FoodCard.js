@@ -12,7 +12,13 @@ import { Image } from "react-native-expo-image-cache";
 function FoodCard({ onPress, title, image, price, thumbnailUrl }) {
   return (
     <TouchableOpacity onPress={onPress}>
-      <View style={{ marginHorizontal: 10, justifyContent: "center" }}>
+      <View
+        style={{
+          marginHorizontal: 10,
+          // marginLeft: 10,
+          justifyContent: "center",
+        }}
+      >
         <Image
           preview={{ uri: thumbnailUrl }}
           tint="light"

@@ -25,7 +25,7 @@ function Signup({ navigation }) {
       return;
     }
     try {
-      const { data } = await axios.post(`/users/signup`, {
+      const { data } = await axios.post(`/user/signup`, {
         name,
         email,
         password,

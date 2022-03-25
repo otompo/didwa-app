@@ -1,5 +1,12 @@
 import React, { useState, useContext, useEffect } from "react";
-import { View, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
+  FlatList,
+} from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import colors from "../config/colors";
@@ -15,140 +22,104 @@ import SubmitButton from "../components/SubmitButton";
 import AppTextInput from "../components/auth/AppTextInput";
 import CircleLogo from "../components/appLogo/CircleLogo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import ListItem from "../components/ListItem";
+import moment from "moment";
 
-function HistoryScreen() {
-  // const [c_password, setC_Password] = useState("");
-  // const [prevPassword, setPrevPassword] = useState("");
-  // const [newPassword, setNewPassword] = useState("");
-  // const [loading, setLoading] = useState(false);
+function HistoryScreen({ navigation }) {
+  const [myOrders, setMyOrders] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  // const handlePasswordUpdate = async () => {
-  //   try {
-  //     setLoading(true);
-  //     if (!prevPassword || !newPassword || !c_password) {
-  //       alert("All fields are require");
-  //       setLoading(false);
-  //       return;
-  //     }
-  //     const { data } = await axios.put(`/user/update-password`, {
-  //       prevPassword,
-  //       newPassword,
-  //       c_password,
-  //     });
-  //     // console.log(data);
-  //     alert("Success");
-  //     setPrevPassword("");
-  //     newPassword("");
-  //     c_password("");
-  //     setLoading(false);
-  //   } catch (err) {
-  //     alert(err.response.data.message);
-  //     setLoading(false);
-  //   }
-  // };
+  useEffect(() => {
+    loadOrders();
+  }, []);
+
+  const loadOrders = async () => {
+    try {
+      setLoading(true);
+      const { data } = await axios.get(`/orders/myorders`);
+      setMyOrders(data.orders);
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
+  };
   return (
-    <KeyboardAwareScrollView
-      extraScrollHeight={100}
-      enableOnAndroid={true}
-      extraHeight={80}
-      contentContainerStyle={{
-        flexGrow: 1,
-        justifyContent: "center",
-        marginHorizontal: 5,
-      }}
-    >
-      <ScrollView
-        contentContainerStyle={styles.container}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* <View style={styles.headerLine}>
-          <Text
-            title
-            center
-            bold
-            style={{
-              textTransform: "uppercase",
-              textDecorationLine: "underline",
-            }}
-          >
-            Update Password
-          </Text>
+    <View>
+      {loading ? (
+        <View
+          style={{
+            marginVertical: 200,
+          }}
+        >
+          <ActivityIndicator size="large" color={colors.primary} />
         </View>
-        <AppTextInput
-          autoCapitalize="none"
-          autoCorrect={false}
-          icon="lock"
-          value={prevPassword.toString()}
-          setValue={setPrevPassword}
-          placeholder="Previous Password..."
-          secureTextEntry
-          textContentType="password"
-          autoCompleteType="password"
-        />
-        <AppTextInput
-          autoCapitalize="none"
-          autoCorrect={false}
-          icon="lock"
-          value={newPassword.toString()}
-          setValue={setNewPassword}
-          placeholder="New Password..."
-          secureTextEntry
-          textContentType="password"
-          autoCompleteType="password"
-        />
-        <AppTextInput
-          autoCapitalize="none"
-          autoCorrect={false}
-          icon="lock"
-          value={c_password.toString()}
-          setValue={setC_Password}
-          placeholder="Confirm Password..."
-          secureTextEntry
-          textContentType="password"
-          autoCompleteType="password"
-        />
-
-        <SubmitButton
-          title="Update"
-          onPress={handlePasswordUpdate}
-          loading={loading}
-        /> */}
-        <Text>HistoryScreen Screen</Text>
-      </ScrollView>
-    </KeyboardAwareScrollView>
+      ) : (
+        <>
+          {myOrders.length > 0 ? (
+            <FlatList
+              data={myOrders}
+              keyExtractor={(orders) => orders._id.toString()}
+              showsVerticalScrollIndicator={false}
+              renderItem={({ item }) => (
+                <ListItem
+                  image={{ uri: item.food.image.url }}
+                  title={`${item.food.name}`}
+                  subTitle={`GHC ${item.food.price}.00`}
+                  subSubTitle={`${moment(item.createdAt).fromNow()} `}
+                  onPress={() =>
+                    navigation.navigate("OrderDetailsScreen", item)
+                  }
+                />
+              )}
+            />
+          ) : (
+            <View
+              style={{
+                marginVertical: 10,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text style={{ color: colors.danger }}>No orders found</Text>
+            </View>
+          )}
+        </>
+      )}
+    </View>
   );
 }
 
 function PasswordScreen() {
-  // const [c_password, setC_Password] = useState("");
-  // const [prevPassword, setPrevPassword] = useState("");
-  // const [newPassword, setNewPassword] = useState("");
-  // const [loading, setLoading] = useState(false);
+  const [c_password, setC_Password] = useState("");
+  const [prevPassword, setPrevPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  // const handlePasswordUpdate = async () => {
-  //   try {
-  //     setLoading(true);
-  //     if (!prevPassword || !newPassword || !c_password) {
-  //       alert("All fields are require");
-  //       setLoading(false);
-  //       return;
-  //     }
-  //     const { data } = await axios.put(`/user/update-password`, {
-  //       prevPassword,
-  //       newPassword,
-  //       c_password,
-  //     });
-  //     // console.log(data);
-  //     alert("Success");
-  //     setPrevPassword("");
-  //     newPassword("");
-  //     c_password("");
-  //     setLoading(false);
-  //   } catch (err) {
-  //     alert(err.response.data.message);
-  //     setLoading(false);
-  //   }
-  // };
+  const handlePasswordUpdate = async () => {
+    try {
+      setLoading(true);
+      if (!prevPassword || !newPassword || !c_password) {
+        alert("All fields are require");
+        setLoading(false);
+        return;
+      }
+      const { data } = await axios.put(`/user/update-password`, {
+        prevPassword,
+        newPassword,
+        c_password,
+      });
+      alert("Success");
+      setPrevPassword("");
+      setNewPassword("");
+      setC_Password("");
+      setLoading(false);
+    } catch (err) {
+      alert(err.response.data.message);
+      setLoading(false);
+    }
+  };
+
   return (
     <KeyboardAwareScrollView
       extraScrollHeight={100}
@@ -164,7 +135,7 @@ function PasswordScreen() {
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
       >
-        {/* <View style={styles.headerLine}>
+        <View style={styles.headerLine}>
           <Text
             title
             center
@@ -215,8 +186,7 @@ function PasswordScreen() {
           title="Update"
           onPress={handlePasswordUpdate}
           loading={loading}
-        /> */}
-        <Text>Password Screen</Text>
+        />
       </ScrollView>
     </KeyboardAwareScrollView>
   );
@@ -227,11 +197,11 @@ function AccountScreen({ navigation }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("");
+  const [createdAt, setCreatedAt] = useState("");
   const [contactNum, setContactNum] = useState("");
   const [previewImage, setPreviewImage] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-
   const [image, setImage] = useState({
     url: "",
     public_id: "",
@@ -239,11 +209,12 @@ function AccountScreen({ navigation }) {
 
   useEffect(() => {
     if (state.user) {
-      const { name, email, image, contactNum, role } = state.user;
+      const { name, email, image, contactNum, role, createdAt } = state.user;
       setName(name);
       setEmail(email);
       setRole(role);
       setImage(image);
+      setCreatedAt(createdAt);
       setContactNum(contactNum);
     }
     if (state.user === null) navigation.navigate("Home");
@@ -302,16 +273,14 @@ function AccountScreen({ navigation }) {
       const { data } = await axios.put(`/user/update-profile`, {
         name,
         email,
-        bio,
         contactNum,
       });
-      await AsyncStorage.setItem("@auth", JSON.stringify(data));
+      // await AsyncStorage.setItem("@auth", JSON.stringify(data));
       setState({ ...state, user: data });
       alert("Update success");
       setLoading(false);
     } catch (err) {
       console.log(err);
-      // alert(err.response.data.message);
       setLoading(false);
     }
   };
@@ -377,6 +346,7 @@ function AccountScreen({ navigation }) {
             </TouchableOpacity>
           )}
         </CircleLogo>
+        <Text>Joined Date: {moment(createdAt).fromNow()}</Text>
 
         {/* {image && image.url ? (
           <TouchableOpacity
@@ -432,7 +402,7 @@ const TopTabNavigator = createMaterialTopTabNavigator();
 function TopTabs() {
   return (
     <TopTabNavigator.Navigator
-      initialRouteName="Account"
+      initialRouteName="History"
       screenOptions={{
         tabBarActiveTintColor: "#e91e63",
         tabBarLabelStyle: {

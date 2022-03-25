@@ -78,14 +78,15 @@ function Market(props) {
     <>
       <ImageBackground
         ImageBackground
-        blurRadius={5}
-        source={require("../assets/okrastew.jpg")}
+        blurRadius={4}
+        source={require("../assets/adaptive-icon.png")}
         style={styles.infoTop}
       >
         <Text
           style={{
             fontSize: 30,
-            color: "white",
+            color: colors.black,
+            fontWeight: "bold",
             marginHorizontal: 15,
           }}
         >
@@ -94,7 +95,8 @@ function Market(props) {
         <Text
           style={{
             fontSize: 30,
-            color: "white",
+            color: colors.black,
+            fontWeight: "bold",
             marginHorizontal: 15,
           }}
         >
@@ -238,7 +240,7 @@ const styles = StyleSheet.create({
   },
   infoTop: {
     width: "100%",
-    height: 150,
+    height: 155,
     justifyContent: "center",
     alignItems: "center",
   },

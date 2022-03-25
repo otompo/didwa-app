@@ -18,6 +18,9 @@ import HeaderTabs from "./HeaderTabs";
 import RestaurantDetailsScreen from "../../screens/RestaurantDetailsScreen";
 import FoodDetailsScreen from "../../screens/FoodDetailsScreen";
 import HeaderTopLeft from "./HeaderTopLeft";
+import CategoryDetails from "../../screens/CategoryDetails";
+import OrderDetailsScreen from "../../screens/OrderDetailsScreen";
+import Food from "../../screens/Food";
 
 const Stack = createNativeStackNavigator();
 
@@ -77,6 +80,16 @@ export default function ScreensNav() {
           headerLeft: () => <HeaderTopLeft />,
         }}
       />
+      <Stack.Screen
+        name="Food"
+        component={Food}
+        options={{
+          title: "",
+          headerShown: true,
+          // headerRight: () => <HeaderTabs />,
+          headerLeft: () => <HeaderTopLeft />,
+        }}
+      />
 
       <Stack.Screen
         name="Profile"
@@ -92,10 +105,28 @@ export default function ScreensNav() {
         name="RestaurantDetailsScreen"
         component={RestaurantDetailsScreen}
         options={{
-          title: "DiDwa",
+          title: "",
           headerShown: true,
-          headerRight: () => <HeaderTabs />,
-          headerLeft: () => <></>,
+          headerLeft: () => <HeaderTopLeft />,
+        }}
+      />
+      <Stack.Screen
+        name="OrderDetailsScreen"
+        component={OrderDetailsScreen}
+        options={{
+          title: "",
+          headerShown: true,
+          headerLeft: () => <HeaderTopLeft />,
+        }}
+      />
+      <Stack.Screen
+        name="CategoryDetails"
+        component={CategoryDetails}
+        options={{
+          title: "",
+          headerShown: true,
+
+          headerLeft: () => <HeaderTopLeft />,
         }}
       />
       <Stack.Screen

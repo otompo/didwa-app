@@ -4,7 +4,7 @@ import ScreensNav from "./components/nav/ScreensNav";
 import authStorage from "./context/storage";
 import AppLoading from "expo-app-loading";
 import { AuthContext, AuthProvider } from "./context/authContext";
-import { FoodProvider } from "./context/foodContext";
+import { RestaurantProvider } from "./context/restaurant";
 
 export default function RootNavigation() {
   const [state, setState] = useContext(AuthContext);
@@ -30,9 +30,9 @@ export default function RootNavigation() {
   return (
     <NavigationContainer>
       <AuthProvider>
-        <FoodProvider>
+        <RestaurantProvider>
           {authenticated ? <ScreensNav /> : <ScreensNav />}
-        </FoodProvider>
+        </RestaurantProvider>
       </AuthProvider>
     </NavigationContainer>
   );

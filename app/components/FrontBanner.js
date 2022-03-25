@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
-    height: 220,
+    height: 200,
     marginTop: 1,
   },
   swiper: {
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
 
   bannerImage: {
     width: "100%",
-    height: 220,
+    height: 200,
     // height: height / 3,
   },
 });

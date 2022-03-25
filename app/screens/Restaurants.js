@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -9,17 +9,17 @@ import {
 } from "react-native";
 import FooterTabs from "../components/nav/FooterTabs";
 import Screen from "../components/Screen";
-import Text from "@kaloraat/react-native-text";
 import colors from "../config/colors";
 import { WebView } from "react-native-webview";
+import { RestaurantContext } from "../context/restaurant";
 import Card from "../components/Card";
 import axios from "axios";
-import SvgUri from "expo-svg-uri";
 
 function Restaurants({ navigation }) {
   const [success, setSuccess] = useState(false);
-  const [restaurants, setRestaurants] = useState([]);
-
+  // const [restaurants, setRestaurants] = useState([]);
+  const [restaurants, setRestaurants] = useContext(RestaurantContext);
+  // console.log("restaurants", restaurants);
   useEffect(() => {
     loadRestaurants();
   }, []);
@@ -29,7 +29,8 @@ function Restaurants({ navigation }) {
     try {
       setSuccess(true);
       const { data } = await axios.get(`/admin/restaurant`);
-      setRestaurants(data.restaurants);
+      // setRestaurants(data.restaurants);
+      setRestaurants([...restaurants, ...data.restaurants]);
       setSuccess(false);
     } catch (err) {
       console.log(err);
@@ -56,36 +57,32 @@ function Restaurants({ navigation }) {
   }
 
   return (
-    <Screen style={styles.mainContainer}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{ margin: 10 }}>
-          {/* {success ? (
-            <ActivityIndicator size="large" color="white" />
-          ) : (
-            <> */}
-          <FlatList
-            data={restaurants}
-            keyExtractor={(restaurant) => restaurant.slug.toString()}
-            renderItem={({ item }) => (
+    <View style={styles.mainContainer}>
+      <ScrollView>
+        {restaurants &&
+          restaurants.map((restaurant, i) => (
+            <View key={i}>
               <Card
-                title={item.name}
-                subTitle={item.location}
-                // subSubTitle={item.description}
-                image={item && item.featuredImage && item.featuredImage[0].url}
+                title={restaurant.name}
+                subTitle={restaurant.location}
+                restaurant={restaurant}
+                // subSubTitle={restaurant.description}
+                image={
+                  restaurant &&
+                  restaurant.featuredImage &&
+                  restaurant.featuredImage[0].url
+                }
                 onPress={() =>
-                  navigation.navigate("RestaurantDetailsScreen", item)
+                  navigation.navigate("RestaurantDetailsScreen", restaurant)
                 }
               />
-            )}
-          />
-          {/* </>
-          )} */}
-        </View>
+            </View>
+          ))}
       </ScrollView>
       <View style={styles.footerTabs}>
         <FooterTabs />
       </View>
-    </Screen>
+    </View>
   );
 }
 
