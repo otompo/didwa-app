@@ -1,9 +1,9 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Text from "@kaloraat/react-native-text";
-import { Divider, Badge } from "react-native-elements";
+import { Divider } from "react-native-elements";
 import colors from "../../config/colors";
 import { AuthContext } from "../../context/authContext";
 

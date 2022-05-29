@@ -1,18 +1,12 @@
 import React from "react";
-import {
-  View,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  TouchableHighlight,
-} from "react-native";
+import { View, StyleSheet, Image, TouchableHighlight } from "react-native";
 import colors from "../config/colors";
 import AppText from "./AppText";
 import {
   GestureHandlerRootView,
   Swipeable,
 } from "react-native-gesture-handler";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Divider } from "react-native-elements";
 
 function ListItem({
@@ -23,6 +17,8 @@ function ListItem({
   onPress,
   IconComponent,
   renderRightActions,
+  icon = "chevron-right",
+  size,
 }) {
   return (
     <GestureHandlerRootView>
@@ -48,8 +44,8 @@ function ListItem({
               )}
             </View>
             <MaterialCommunityIcons
-              name="chevron-right"
-              size={20}
+              name={icon}
+              size={size}
               color={colors.medium}
             />
           </View>
@@ -73,6 +69,14 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     borderRadius: 35,
+    borderWidth: 1,
+    borderColor: colors.primary,
+    shadowColor: "#171717",
+    shadowOffset: { width: -2, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 2,
+
     // marginRight: 10,
   },
   title: {

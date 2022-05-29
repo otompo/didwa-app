@@ -1,109 +1,265 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
   Text,
   SafeAreaView,
-  ScrollView,
   FlatList,
-  ActivityIndicator,
+  RefreshControl,
+  ScrollView,
   ImageBackground,
+  Image,
+  TouchableOpacity,
+  Button,
 } from "react-native";
-import AppText from "../components/AppText";
 import FooterTabs from "../components/nav/FooterTabs";
-import Screen from "../components/Screen";
 import ListItem from "../components/ListItem";
+import ProductCard from "../components/ProductCard";
 import colors from "../config/colors";
+import { FontAwesome } from "@expo/vector-icons";
+import Modal from "react-native-modal";
+import axios from "axios";
+import FoodTopTitle from "../components/FoodTopTitle";
+import CartInputText from "../components/CartInputText/CartInputText";
+import FormatCurrency from "../components/FormatCurrency";
+import SubmitButton from "../components/SubmitButton";
+import { CartContext } from "../context/cartContext";
+import { addToCart } from "../actions/Actions";
+import RenderHtml from "react-native-render-html";
+import { useWindowDimensions } from "react-native";
 
 function CategoryDetails({ route, navigation }) {
+  const { stateData, dispatch } = useContext(CartContext);
+  const { cart } = stateData;
   const category = route.params;
   const id = category._id;
-  const [foods, setFoods] = useState([]);
+  const [products, setProducts] = useState([]);
   const [success, setSuccess] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [cartData, setCartData] = useState({});
+  const [amount, setAmount] = useState("");
+  const [extraInfo, setExtraInfo] = useState("");
+  const { width } = useWindowDimensions();
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
 
   useEffect(() => {
-    getCategoryFood();
-  }, []);
-  const getCategoryFood = async () => {
+    getProductCategory();
+  }, [cart]);
+
+  const getProductCategory = async () => {
     try {
       setSuccess(true);
-      const { data } = await axios.get(`/food/category/${id}`);
-      setFoods(data.food);
-      //   console.log(data.food);
+      const { data } = await axios.get(`/products/category/${id}`);
+      setProducts(data);
       setSuccess(false);
     } catch (err) {
       console.log(err);
       setSuccess(false);
     }
   };
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      getProductCategory();
+      setRefreshing(false);
+    }, 2000);
+  };
+  if (success) {
+    return (
+      <View
+        style={{
+          alignItems: "center",
+          backgroundColor: "#fff",
+          height: "100%",
+          justifyContent: "center",
+        }}
+      >
+        <Image
+          source={require("../assets/loader.gif")}
+          style={{ height: 100, width: 100 }}
+        />
+      </View>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground
         ImageBackground
         blurRadius={5}
-        source={require("../assets/adaptive-icon.png")}
+        source={{
+          uri: "https://res.cloudinary.com/sky-tech/image/upload/v1648316657/didwa/images/WhatsApp_Image_2022-03-26_at_4.39.39_PM_xsxfxe.jpg",
+        }}
         style={styles.infoTop}
       >
         <Text
           style={{
-            fontSize: 30,
-            color: colors.black,
+            fontSize: 25,
+            color: colors.white,
             fontWeight: "bold",
             marginHorizontal: 15,
           }}
         >
-          Buy {category.title} from our
-        </Text>
-        <Text
-          style={{
-            fontSize: 20,
-            color: colors.black,
-            fontWeight: "bold",
-            marginHorizontal: 15,
-          }}
-        >
-          List of restaurant(s) below
+          List Of {category.name}
         </Text>
       </ImageBackground>
-      {success ? (
-        <View
-          style={{
-            marginVertical: 200,
-          }}
-        >
-          <ActivityIndicator size="large" color={colors.primary} />
-        </View>
-      ) : (
-        <>
-          {foods.length > 0 ? (
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        <FoodTopTitle title="Want to buy some foodstuff ?..." />
+
+        <SafeAreaView style={styles.MainContainer}>
+          <>
             <FlatList
-              data={foods}
-              keyExtractor={(food) => food._id.toString()}
-              showsVerticalScrollIndicator={false}
+              data={products}
+              keyExtractor={(product) => product.slug.toString()}
+              numColumns={2}
               renderItem={({ item }) => (
-                <ListItem
-                  image={{ uri: item.image.url }}
-                  title={`${item.name}`}
-                  subTitle={`GHC ${item.price}.00`}
-                  subSubTitle={`${item.restaurant.name}`}
-                  onPress={() => navigation.navigate("FoodDetailsScreen", item)}
+                <ProductCard
+                  name={item.name}
+                  image={item.image.url}
+                  thumbnailUrl={item.image.url}
+                  onPress={() => {
+                    setModalVisible(!isModalVisible);
+                    setCartData(item);
+                  }}
                 />
               )}
             />
-          ) : (
-            <View
-              style={{
-                marginVertical: 10,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Text style={{ color: colors.danger }}>No Restaurant found</Text>
-            </View>
-          )}
-        </>
-      )}
+            <Modal isVisible={isModalVisible}>
+              <View
+                style={{
+                  // flex: 1,
+                  color: colors.white,
+                  backgroundColor: colors.white,
+                  borderRadius: 5,
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    marginTop: 10,
+                  }}
+                >
+                  <Text style={{ fontWeight: "bold", marginLeft: 10 }}>
+                    Item:{" "}
+                    <Text style={{ color: colors.secoundary }}>
+                      {cartData && cartData.name}
+                    </Text>
+                  </Text>
+
+                  <TouchableOpacity
+                    onPress={toggleModal}
+                    style={{ marginRight: 10 }}
+                  >
+                    <FontAwesome name="close" size={30} color={colors.medium} />
+                  </TouchableOpacity>
+                </View>
+                {/* Form */}
+
+                <CartInputText
+                  value={amount}
+                  setValue={setAmount}
+                  autoCapitalize="words"
+                  keyboardType="numeric"
+                  placeholder="Enter Amount"
+                  autoCorrect={false}
+                />
+                <CartInputText
+                  value={extraInfo}
+                  setValue={setExtraInfo}
+                  autoCorrect={false}
+                  autoCapitalize="words"
+                  keyboardType="default"
+                  placeholder="Enter any extra information"
+                />
+                <View
+                  style={{
+                    marginVertical: 10,
+                    marginHorizontal: 20,
+                    alignContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>
+                    Enter amount of{" "}
+                    <Text style={{ color: colors.secoundary }}>
+                      {FormatCurrency(Number(cartData.minAmount))}
+                    </Text>
+                    or above
+                  </Text>
+                </View>
+
+                <View
+                  style={{
+                    marginHorizontal: 35,
+                    alignContent: "center",
+                  }}
+                >
+                  <SubmitButton
+                    title="Add to Cart"
+                    disabled={
+                      Number(amount) >= cartData.minAmount ? false : true
+                    }
+                    onPress={() => {
+                      dispatch(addToCart(cartData, cart)),
+                        setModalVisible(false);
+                    }}
+                  />
+                </View>
+                <View
+                  style={{
+                    marginHorizontal: 35,
+                    // alignItems: "center",
+                  }}
+                >
+                  <RenderHtml
+                    contentWidth={width}
+                    source={{
+                      html: `${
+                        cartData.description ? cartData.description : ""
+                      }`,
+                    }}
+                  />
+                </View>
+
+                <View
+                  style={{
+                    marginVertical: 10,
+                    marginHorizontal: 35,
+                    alignContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <View>
+                    {amount < Number(cartData.minAmount) ? (
+                      <Text
+                        style={{
+                          color: colors.danger,
+                        }}
+                      >
+                        Please amount of {FormatCurrency(Number(amount))} is
+                        less
+                      </Text>
+                    ) : (
+                      <></>
+                    )}
+                  </View>
+                </View>
+              </View>
+            </Modal>
+          </>
+        </SafeAreaView>
+      </ScrollView>
+
       <View style={styles.footerTabs}>
         <FooterTabs />
       </View>
@@ -114,6 +270,11 @@ function CategoryDetails({ route, navigation }) {
 export default CategoryDetails;
 
 const styles = StyleSheet.create({
+  MainContainer: {
+    flex: 1,
+    borderColor: colors.primary,
+    marginRight: 10,
+  },
   container: {
     flex: 1,
     justifyContent: "space-between",

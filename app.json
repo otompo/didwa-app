@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "DiDwa",
-    "slug": "didwa",
-    "version": "1.0.0",
+    "name": "Edwom",
+    "slug": "edwom",
+    "version": "1.1",
     "orientation": "portrait",
     "icon": "./app/assets/icon.png",
     "splash": {
@@ -18,8 +18,8 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.didwa.didwa",
-      "buildNumber": "1.0.0"
+      "bundleIdentifier": "com.edwom.edwom",
+      "buildNumber": "1.1"
     },
     "android": {
       "adaptiveIcon": {
@@ -27,8 +27,9 @@
         "backgroundColor": "#FFFFFF"
       },
       "softwareKeyboardLayoutMode": "pan",
-      "package": "com.didwa.didwa",
-      "versionCode":1
+      "package": "com.edwom.edwom",
+      "versionCode": 2,
+      "permissions" : []
     },
     "web": {
       "favicon": "./app/assets/favicon.png"

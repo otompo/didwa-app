@@ -1,5 +1,6 @@
 import React from "react";
 import { Text, View } from "react-native";
+import colors from "../config/colors";
 
 function FoodTopTitle({ title }) {
   return (
@@ -8,8 +9,7 @@ function FoodTopTitle({ title }) {
         style={{
           fontWeight: "bold",
           fontSize: 16,
-          marginTop: 15,
-          marginBottom: 10,
+          marginTop: 5,
           marginHorizontal: 20,
         }}
       >

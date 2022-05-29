@@ -3,21 +3,21 @@ import React, { useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
-  Text,
   ScrollView,
   FlatList,
   Image,
+  RefreshControl,
+  Keyboard,
 } from "react-native";
 import FoodListCard from "../components/FoodListCard";
-import FoodCard from "../components/FoodCard";
 import ListItem from "../components/ListItem";
-import FooterTabs from "../components/nav/FooterTabs";
 import Search from "../components/Search";
-import colors from "../config/colors";
+
 function Food({ navigation }) {
   const [keyword, setKeyword] = useState("");
   const [foodList, setFoodList] = useState([]);
   const [success, setSuccess] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     loadFoodsList();
@@ -29,7 +29,7 @@ function Food({ navigation }) {
       const { data } = await axios.get(`/food/foodlist`);
       setFoodList(data);
       setSuccess(false);
-      // console.log(data.foods);
+      // console.log(data);
     } catch (err) {
       console.log(err);
       setSuccess(false);
@@ -57,12 +57,28 @@ function Food({ navigation }) {
       </View>
     );
   }
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      loadFoodsList();
+      setSuccess(false);
+      setRefreshing(false);
+    }, 2000);
+  };
+
+  const handlePress = () => {
+    setKeyword("");
+    Keyboard.dismiss();
+  };
+
   return (
     <>
       <Search
         value={keyword}
         setValue={setKeyword}
         placeholder="Search food..."
+        handlePress={handlePress}
       />
 
       {keyword ? (
@@ -106,6 +122,9 @@ function Food({ navigation }) {
                 onPress={() => navigation.navigate("FoodDetailsScreen", item)}
               />
             )}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
           />
 
           {/* <View style={styles.footerTabs}>

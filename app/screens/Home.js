@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   View,
   StyleSheet,
@@ -7,43 +7,73 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  RefreshControl,
+  Keyboard,
+  SafeAreaView,
+  TextInput,
+  Button,
 } from "react-native";
 import Menu from "../components/Menu";
 import FooterTabs from "../components/nav/FooterTabs";
 import Search from "../components/Search";
 import SpeedDial from "../components/SpeedDial";
 import colors from "../config/colors";
-import FoodCard from "../components/FoodCard";
+import ProductCard from "../components/ProductCard";
 import FoodTopTitle from "../components/FoodTopTitle";
 import axios from "axios";
 import FrontBanner from "../components/FrontBanner";
 import ListItem from "../components/ListItem";
 import { FontAwesome } from "@expo/vector-icons";
 import { dummyData } from "../data/IngredientsData";
+import Modal from "react-native-modal";
+import CartInputText from "../components/CartInputText/CartInputText";
+import FormatCurrency from "../components/FormatCurrency";
+import SubmitButton from "../components/SubmitButton";
+import { CartContext } from "../context/cartContext";
+import { addToCart } from "../actions/Actions";
+import RenderHtml from "react-native-render-html";
+import { useWindowDimensions } from "react-native";
 
 function Home({ navigation }) {
+  const { stateData, dispatch } = useContext(CartContext);
+  const { cart } = stateData;
+  // console.log("cart", cart);
   const [ingredientsData, setIngredientsData] = useState([]);
   const [keyword, setKeyword] = useState("");
   const [success, setSuccess] = useState(false);
-  const [loading, setLoading] = useState(false);
+  // const [showIcon, setShowIcon] = useState(false);
   const [foods, setFoods] = useState([]);
-  const [foodList, setFoodList] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [productsList, setProductsList] = useState([]);
   const [categories, setCategories] = useState([]);
   const [foodsCount, setFoodsCount] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [cartData, setCartData] = useState({});
+  const [amount, setAmount] = useState("");
+  const [extraInfo, setExtraInfo] = useState("");
+  // console.log(cartData);
+  const { width } = useWindowDimensions();
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
   // console.log(foodsCount);
   useEffect(() => {
-    loadFoods();
+    // loadFoods();
+    loadProducts();
     loadFoodsList();
     getCategories();
     loadFoodsCount();
     setIngredientsData(dummyData);
   }, []);
+  useEffect(() => {}, [cart]);
 
   const loadFoodsList = async () => {
     try {
       setSuccess(true);
-      const { data } = await axios.get(`/food/foodlist`);
-      setFoodList(data);
+      const { data } = await axios.get(`/products/productslist`);
+      setProductsList(data);
       setSuccess(false);
       // console.log(data.foods);
     } catch (err) {
@@ -53,20 +83,24 @@ function Home({ navigation }) {
   };
 
   const loadFoodsCount = async () => {
-    const { data } = await axios.get(`/food/foods-count`);
-    setFoodsCount(data);
+    try {
+      setSuccess(true);
+      const { data } = await axios.get(`/food/foods-count`);
+      setFoodsCount(data);
+      setSuccess(false);
+    } catch (err) {
+      console.log(err);
+      setSuccess(false);
+    }
   };
 
   const getCategories = async () => {
     try {
-      // setLoading(true);
-      const { data } = await axios.get(`/admin/category`);
+      const { data } = await axios.get(`/admin/category/ingredients`);
       setCategories(data.categories);
       // console.log(data.categories);
-      // setLoading(false);
     } catch (err) {
       console.log(err);
-      // setLoading(false);
     }
   };
 
@@ -83,23 +117,18 @@ function Home({ navigation }) {
     }
   };
 
-  if (success) {
-    return (
-      <View
-        style={{
-          alignItems: "center",
-          backgroundColor: "#fff",
-          height: "100%",
-          justifyContent: "center",
-        }}
-      >
-        <Image
-          source={require("../assets/loader.gif")}
-          style={{ height: 100, width: 100 }}
-        />
-      </View>
-    );
-  }
+  const loadProducts = async () => {
+    try {
+      setSuccess(true);
+      const { data } = await axios.get(`/products`);
+      // console.log(data);
+      setProducts(data);
+      setSuccess(false);
+    } catch (err) {
+      console.log(err);
+      setSuccess(false);
+    }
+  };
 
   if (success) {
     return (
@@ -164,32 +193,64 @@ function Home({ navigation }) {
       </View>
     );
   };
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      loadProducts();
+      // loadFoodsList();
+      // getCategories();
+      // loadFoodsCount();
+      // setSuccess(false);
+      setRefreshing(false);
+    }, 2000);
+  };
+
+  const handlePress = () => {
+    setKeyword("");
+    Keyboard.dismiss();
+  };
+
   return (
     <>
       <Search
         value={keyword}
         setValue={setKeyword}
-        placeholder="Search food..."
+        placeholder="Search foodstuff..."
+        handlePress={handlePress}
       />
+
       {keyword ? (
         <>
           <ScrollView showsVerticalScrollIndicator={false}>
-            {foodList &&
-              foodList
-                .filter(searched(keyword))
-                .map((food, i) => (
-                  <ListItem
-                    key={i}
-                    image={{ uri: food.image.url }}
-                    subTitle={`${"GHC "}` + food.price + `${".00 "}`}
-                    subSubTitle={food.restaurant.name}
-                    title={food.name}
-                    onPress={() =>
-                      navigation.navigate("FoodDetailsScreen", food)
-                    }
-                  />
-                ))}
+            {productsList.length > 0 ? (
+              productsList.filter(searched(keyword)).map((product, i) => (
+                <ListItem
+                  key={i}
+                  image={{ uri: product.image.url }}
+                  title={product.name}
+                  size={25}
+                  onPress={() => {
+                    setKeyword("");
+                    setModalVisible(!isModalVisible);
+                    setCartData(product);
+                    Keyboard.dismiss();
+                  }}
+                />
+              ))
+            ) : (
+              <View
+                style={{
+                  marginVertical: 10,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{ color: colors.danger }}>No Result found</Text>
+              </View>
+            )}
           </ScrollView>
+
           <View style={styles.footerTabs}>
             <View style={{ backgroundColor: colors.secoundary }}>
               <FooterTabs />
@@ -202,91 +263,195 @@ function Home({ navigation }) {
             horizontal
             showsHorizontalScrollIndicator={false}
             data={categories}
+            style={styles.flatList}
             keyExtractor={(category) => category._id.toString()}
             renderItem={({ item }) => (
               <Menu
-                title={item.title}
-                icon={item.icon}
+                title={item.name}
+                // icon={item.icon}
                 onPress={() => navigation.navigate("CategoryDetails", item)}
               />
             )}
           />
 
-          {/* Menu ends */}
-          <View>
+          {/* <View style={styles.banner}>
             <FrontBanner />
-          </View>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <FoodTopTitle title="Want to buy some food?..." />
-            <FlatList
-              data={foods}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              keyExtractor={(food) => food.slug.toString()}
-              ListFooterComponent={renderFooter}
-              enableEmptySections={true}
-              renderItem={({ item }) => (
-                <FoodCard
-                  title={item.name}
-                  price={`${"GHC "}` + item.price + `${".00 "}`}
-                  image={item.image.url}
-                  thumbnailUrl={item.image.url}
-                  // image={{ uri: item.image.url }}
-                  onPress={() => navigation.navigate("FoodDetailsScreen", item)}
+          </View> */}
+
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+            // style={{ marginTop: 20, backgroundColor: colors.danger }}
+          >
+            <SafeAreaView style={styles.MainContainer}>
+              <FoodTopTitle title="Want to buy some foodstuff ?..." />
+              <>
+                <FlatList
+                  data={products}
+                  keyExtractor={(product) => product.slug.toString()}
+                  numColumns={2}
+                  renderItem={({ item }) => (
+                    <ProductCard
+                      name={item.name}
+                      image={item.image.url}
+                      thumbnailUrl={item.image.url}
+                      onPress={() => {
+                        setModalVisible(!isModalVisible);
+                        setCartData(item);
+                      }}
+                    />
+                  )}
                 />
-              )}
-            />
+                <Modal isVisible={isModalVisible}>
+                  <View
+                    style={{
+                      // flex: 1,
+                      color: colors.white,
+                      backgroundColor: colors.white,
+                      borderRadius: 5,
+                    }}
+                  >
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        marginTop: 10,
+                      }}
+                    >
+                      <Text style={{ fontWeight: "bold", marginLeft: 10 }}>
+                        Item:{" "}
+                        <Text style={{ color: colors.secoundary }}>
+                          {cartData && cartData.name}
+                        </Text>
+                      </Text>
 
-            <View>
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 16,
-                  // marginTop: 20,
-                  // marginBottom: 5,
-                  marginHorizontal: 20,
-                }}
-              >
-                Let's buy you ingredients...
-              </Text>
-            </View>
-            <View style={{ flex: 1, marginVertical: 20 }}>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                {ingredientsData &&
-                  ingredientsData.map((ingredient, i) => (
-                    <View key={i}>
                       <TouchableOpacity
-                        onPress={() => navigation.navigate("Market")}
+                        onPress={toggleModal}
+                        style={{ marginRight: 10 }}
                       >
-                        <View
-                          style={{
-                            marginHorizontal: 10,
-                            justifyContent: "center",
-                          }}
-                        >
-                          <Image
-                            source={{ uri: ingredient.url }}
-                            style={styles.image}
-                          />
-
-                          <View style={styles.titleContainer}>
-                            <Text
-                              style={{
-                                fontWeight: "bold",
-                                fontSize: 20,
-                                color: colors.white,
-                                marginHorizontal: 10,
-                              }}
-                            >
-                              {ingredient.name}
-                            </Text>
-                          </View>
-                        </View>
+                        <FontAwesome
+                          name="close"
+                          size={30}
+                          color={colors.medium}
+                        />
                       </TouchableOpacity>
                     </View>
-                  ))}
-              </ScrollView>
-            </View>
+                    {/* Form */}
+
+                    <CartInputText
+                      value={amount}
+                      setValue={setAmount}
+                      keyboardType="numeric"
+                      placeholder="Enter Amount"
+                      autoCorrect={false}
+                    />
+                    <CartInputText
+                      value={extraInfo}
+                      setValue={setExtraInfo}
+                      autoCorrect={false}
+                      autoCapitalize="words"
+                      keyboardType="default"
+                      placeholder="Enter any extra information"
+                    />
+                    <View
+                      style={{
+                        alignContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Text>
+                        Enter amount of{" "}
+                        <Text style={{ color: colors.secoundary }}>
+                          {FormatCurrency(Number(cartData.minAmount))}
+                        </Text>
+                        or above
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        marginHorizontal: 35,
+                        alignContent: "center",
+                      }}
+                    >
+                      {/* {Number(amount) >= cartData.minAmount ? (
+                        <SubmitButton
+                          title="Add to Cart"
+                          onPress={() => {
+                            dispatch(
+                              addToCart(cartData, cart, amount, extraInfo)
+                            ),
+                              setModalVisible(false);
+                            setAmount("");
+                            setExtraInfo("");
+                          }}
+                        />
+                      ) : (
+                        <Text>
+                          Please amount of {FormatCurrency(Number(amount))} is
+                          less
+                        </Text>
+                      )} */}
+
+                      <SubmitButton
+                        title="Add to Cart"
+                        disabled={
+                          Number(amount) >= cartData.minAmount ? false : true
+                        }
+                        onPress={() => {
+                          dispatch(
+                            addToCart(cartData, cart, amount, extraInfo)
+                          ),
+                            setModalVisible(false);
+                          setAmount("");
+                          setExtraInfo("");
+                        }}
+                      />
+                    </View>
+                    <View
+                      style={{
+                        marginHorizontal: 35,
+                        // alignItems: "center",
+                      }}
+                    >
+                      <RenderHtml
+                        contentWidth={width}
+                        source={{
+                          html: `${
+                            cartData.description ? cartData.description : ""
+                          }`,
+                        }}
+                      />
+                    </View>
+
+                    <View
+                      style={{
+                        marginVertical: 10,
+                        marginHorizontal: 35,
+                        alignContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <View>
+                        {amount < Number(cartData.minAmount) ? (
+                          <Text
+                            style={{
+                              color: colors.danger,
+                            }}
+                          >
+                            Please amount of {FormatCurrency(Number(amount))} is
+                            less
+                          </Text>
+                        ) : (
+                          <></>
+                        )}
+                      </View>
+                    </View>
+                  </View>
+                </Modal>
+              </>
+            </SafeAreaView>
 
             {/* <SpeedDial /> */}
           </ScrollView>
@@ -356,5 +521,32 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 15,
     textAlign: "center",
+  },
+  banner: {
+    marginTop: 20,
+  },
+
+  // mainContainer: {
+  //   flex: 1,
+  //   justifyContent: "space-between",
+  // },
+
+  // container: {
+  //   flex: 1,
+  //   flexDirection: "row",
+  //   justifyContent: "space-around", //replace with flex-end or center
+  //   marginVertical: 50,
+  //   marginHorizontal: 10,
+  //   flexWrap: "wrap",
+  // },
+
+  MainContainer: {
+    flex: 1,
+    marginVertical: 20,
+    justifyContent: "space-between",
+  },
+  flatList: {
+    height: 62,
+    flexGrow: 0,
   },
 });

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { SpeedDial } from "react-native-elements";
 import colors from "../config/colors";
 import { WebView } from "react-native-webview";

@@ -1,14 +1,6 @@
-import React, { useEffect, useState } from "react";
-import {
-  View,
-  StyleSheet,
-  ActivityIndicator,
-  Text,
-  TouchableOpacity,
-  FlatList,
-} from "react-native";
-// import Text from "@kaloraat/react-native-text";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import React from "react";
+import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import colors from "../config/colors";
 
 function Menu({ title, icon, onPress }) {
@@ -18,7 +10,7 @@ function Menu({ title, icon, onPress }) {
         <View
           style={{
             marginTop: 10,
-            marginBottom: 10,
+            marginBottom: 15,
             borderRadius: 20,
             marginHorizontal: 5,
             backgroundColor: colors.secoundary,
@@ -38,7 +30,7 @@ function Menu({ title, icon, onPress }) {
           <Text
             style={{
               color: colors.white,
-              padding: 10,
+              paddingLeft: 15,
               fontWeight: "bold",
             }}
           >
@@ -65,12 +57,11 @@ const styles = StyleSheet.create({
     height: 60,
     backgroundColor: colors.light,
     flexGrow: 0,
-    marginBottom: 40,
+    marginBottom: 60,
   },
   menuText: {
     color: colors.primary,
-    margin: 5,
-    // padding: 2,
+    paddingBottom: 15,
     fontSize: 16,
     fontWeight: "bold",
   },

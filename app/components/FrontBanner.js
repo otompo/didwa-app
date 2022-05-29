@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Image, Dimensions, ScrollView } from "react-native";
+import { View, StyleSheet, Image, ScrollView } from "react-native";
 import Swiper from "react-native-swiper/src";
 import { dummyData } from "../data/Data";
-const { width, height } = Dimensions.get("window");
 
 function FrontBanner({ style }) {
   const [bannerData, setBannerData] = useState([]);

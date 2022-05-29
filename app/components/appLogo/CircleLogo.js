@@ -14,8 +14,8 @@ function CircleLogo({ children }) {
       <View
         style={{
           backgroundColor: "#fff",
-          height: 140,
-          width: 140,
+          height: 150,
+          width: 150,
           borderRadius: 80,
           shadowColor: "#171717",
           shadowOffset: { width: -2, height: 4 },
@@ -30,9 +30,9 @@ function CircleLogo({ children }) {
           children
         ) : (
           <Image
-            source={require("../../assets/logo.jpeg")}
+            source={require("../../assets/logo.png")}
             style={{
-              width: 100,
+              width: 105,
               height: 100,
               marginVertical: 20,
               marginHorizontal: 20,

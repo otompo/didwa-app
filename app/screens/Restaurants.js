@@ -1,16 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-  View,
-  StyleSheet,
-  FlatList,
-  ScrollView,
-  ActivityIndicator,
-  Image,
-} from "react-native";
+import { View, StyleSheet, ScrollView, Image } from "react-native";
 import FooterTabs from "../components/nav/FooterTabs";
-import Screen from "../components/Screen";
 import colors from "../config/colors";
-import { WebView } from "react-native-webview";
 import { RestaurantContext } from "../context/restaurant";
 import Card from "../components/Card";
 import axios from "axios";

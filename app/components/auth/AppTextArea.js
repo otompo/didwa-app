@@ -1,6 +1,6 @@
 import React from "react";
-import { View, TextInput, StyleSheet } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { View, StyleSheet } from "react-native";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import defaultStyles from "../../config/styles";
 import colors from "../../config/colors";
 import { AutoGrowingTextInput } from "react-native-autogrow-textinput";

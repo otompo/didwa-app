@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   ImageBackground,
 } from "react-native";
-import AppText from "../components/AppText";
 import SubmitButton from "../components/SubmitButton";
 import axios from "axios";
 import colors from "../config/colors";
@@ -79,13 +78,15 @@ function Market(props) {
       <ImageBackground
         ImageBackground
         blurRadius={4}
-        source={require("../assets/adaptive-icon.png")}
+        source={{
+          uri: "https://res.cloudinary.com/sky-tech/image/upload/v1648316657/didwa/images/WhatsApp_Image_2022-03-26_at_4.39.39_PM_xsxfxe.jpg",
+        }}
         style={styles.infoTop}
       >
         <Text
           style={{
             fontSize: 30,
-            color: colors.black,
+            color: colors.white,
             fontWeight: "bold",
             marginHorizontal: 15,
           }}
@@ -95,7 +96,7 @@ function Market(props) {
         <Text
           style={{
             fontSize: 30,
-            color: colors.black,
+            color: colors.white,
             fontWeight: "bold",
             marginHorizontal: 15,
           }}

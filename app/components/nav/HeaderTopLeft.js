@@ -1,15 +1,6 @@
 import React, { useContext } from "react";
-import {
-  View,
-  TouchableOpacity,
-  SafeAreaView,
-  StyleSheet,
-  Image,
-} from "react-native";
-import Text from "@kaloraat/react-native-text";
+import { View, StyleSheet, Image } from "react-native";
 import { AuthContext } from "../../context/authContext";
-import Icon from "react-native-vector-icons/FontAwesome";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import colors from "../../config/colors";
 
@@ -23,13 +14,13 @@ function HeaderTopLeft() {
   return (
     <View style={styles.container}>
       <Image
-        source={require("../../assets/logo.png")}
+        source={require("../../assets/logot.png")}
         style={{
-          width: 30,
-          height: 40,
+          width: 120,
+          height: 55,
         }}
       />
-      <Text style={styles.text}>DiDwa</Text>
+      {/* <Text style={styles.text}>Edwom</Text> */}
     </View>
   );
 }
@@ -41,7 +32,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     //   marginVertical: 15,
     marginBottom: 15,
-    marginHorizontal: 110,
+    // marginHorizontal: 110,
   },
   text: {
     fontSize: 20,
@@ -53,6 +44,6 @@ const styles = StyleSheet.create({
     elevation: 6,
     position: "absolute",
     bottom: 10,
-    right: -11,
+    right: 11,
   },
 });

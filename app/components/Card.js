@@ -1,9 +1,8 @@
 import React, { useContext, useState } from "react";
-import { View, StyleSheet, TouchableOpacity, Image, Text } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import colors from "../config/colors";
 import { AuthContext } from "../context/authContext";
 import { RestaurantContext } from "../context/restaurant";
-import { Divider } from "react-native-elements";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import AppText from "./AppText";
 import axios from "axios";

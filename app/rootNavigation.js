@@ -5,6 +5,7 @@ import authStorage from "./context/storage";
 import AppLoading from "expo-app-loading";
 import { AuthContext, AuthProvider } from "./context/authContext";
 import { RestaurantProvider } from "./context/restaurant";
+import { CartProvider } from "./context/cartContext";
 
 export default function RootNavigation() {
   const [state, setState] = useContext(AuthContext);
@@ -31,7 +32,9 @@ export default function RootNavigation() {
     <NavigationContainer>
       <AuthProvider>
         <RestaurantProvider>
-          {authenticated ? <ScreensNav /> : <ScreensNav />}
+          <CartProvider>
+            {authenticated ? <ScreensNav /> : <ScreensNav />}
+          </CartProvider>
         </RestaurantProvider>
       </AuthProvider>
     </NavigationContainer>

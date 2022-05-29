@@ -3,14 +3,20 @@ import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import colors from "../config/colors";
 import { Image } from "react-native-expo-image-cache";
 
-function FoodCard({ onPress, title, image, price, thumbnailUrl }) {
+function FoodCard({ onPress, name, image, thumbnailUrl }) {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity
+      // activeOpacity={1}
+      delayPressIn={150}
+      style={styles.gridStyle}
+      onPress={onPress}
+    >
       <View
         style={{
           marginHorizontal: 10,
+          // marginVertical: 10,
           // marginLeft: 10,
-          justifyContent: "center",
+          // justifyContent: "center",
         }}
       >
         <Image
@@ -29,7 +35,7 @@ function FoodCard({ onPress, title, image, price, thumbnailUrl }) {
               marginHorizontal: 10,
             }}
           >
-            {title} {price}
+            {name}
           </Text>
         </View>
       </View>
@@ -50,8 +56,23 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   image: {
-    width: 170,
+    width: 150,
     height: 150,
-    borderRadius: 10,
+    borderRadius: 75,
+    margin: 10,
+    borderColor: colors.primary,
+    borderWidth: 1,
+    shadowColor: "#171717",
+    shadowOffset: { width: -2, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 2,
+  },
+  gridStyle: {
+    flex: 1,
+    justifyContent: "center",
+    // alignItems: "center",
+    // height: 80,
+    margin: 5,
   },
 });

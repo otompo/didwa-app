@@ -5,13 +5,15 @@ import Text from "@kaloraat/react-native-text";
 
 function SubmitButton({
   title,
-  handleSubmit,
   loading,
   color = "primary",
   onPress,
+  disabled,
 }) {
   return (
     <TouchableOpacity
+      disabled={disabled}
+      activeOpacity={disabled ? 0.5 : 1}
       style={[styles.button, { backgroundColor: colors[color] }]}
       onPress={onPress}
     >

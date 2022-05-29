@@ -1,16 +1,6 @@
-import axios from "axios";
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  StyleSheet,
-  Text,
-  Image,
-  Dimensions,
-  ScrollView,
-} from "react-native";
+import React, { useEffect } from "react";
+import { View, StyleSheet, Image, Dimensions, ScrollView } from "react-native";
 import Swiper from "react-native-swiper/src";
-import colors from "../config/colors";
-import { dummyData } from "../data/Data";
 const { width, height } = Dimensions.get("window");
 
 function Banner({ bannerData, style }) {

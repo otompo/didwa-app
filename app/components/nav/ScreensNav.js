@@ -1,12 +1,6 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import colors from "../../config/colors";
-import {
-  View,
-  Text,
-  TouchableNativeFeedbackBase,
-  TouchableOpacity,
-} from "react-native";
 import Home from "../../screens/Home";
 import Restaurants from "../../screens/Restaurants";
 import Market from "../../screens/Market";
@@ -21,6 +15,7 @@ import HeaderTopLeft from "./HeaderTopLeft";
 import CategoryDetails from "../../screens/CategoryDetails";
 import OrderDetailsScreen from "../../screens/OrderDetailsScreen";
 import Food from "../../screens/Food";
+import CartItemDetails from "../../screens/CartItemDetails";
 
 const Stack = createNativeStackNavigator();
 
@@ -48,11 +43,7 @@ export default function ScreensNav() {
         options={{
           title: "",
           headerShown: true,
-          // headerRight: () => (
-          //   <View>
-          //     <Text>Hi</Text>
-          //   </View>
-          // ),
+          headerRight: () => <HeaderTabs icon="shopping-cart" />,
           headerLeft: () => <HeaderTopLeft />,
         }}
       />
@@ -97,7 +88,7 @@ export default function ScreensNav() {
         options={{
           title: "Profile",
           headerShown: true,
-          headerRight: () => <HeaderTabs />,
+          headerRight: () => <HeaderTabs icon="shopping-cart" />,
           headerLeft: () => <></>,
         }}
       />
@@ -116,6 +107,7 @@ export default function ScreensNav() {
         options={{
           title: "",
           headerShown: true,
+          headerRight: () => <HeaderTabs icon="shopping-cart" />,
           headerLeft: () => <HeaderTopLeft />,
         }}
       />
@@ -125,7 +117,7 @@ export default function ScreensNav() {
         options={{
           title: "",
           headerShown: true,
-
+          headerRight: () => <HeaderTabs icon="shopping-cart" />,
           headerLeft: () => <HeaderTopLeft />,
         }}
       />
@@ -137,6 +129,16 @@ export default function ScreensNav() {
         //   headerShown: true,
         //   headerRight: () => <HeaderTabs />,
         // }}
+      />
+      <Stack.Screen
+        name="CartItemDetails"
+        component={CartItemDetails}
+        options={{
+          title: "",
+          headerShown: true,
+          headerRight: () => <HeaderTabs icon="shopping-cart" />,
+          headerLeft: () => <HeaderTopLeft />,
+        }}
       />
 
       <Stack.Screen name="Signin" component={Signin} />

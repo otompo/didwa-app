@@ -6,18 +6,17 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   FlatList,
+  RefreshControl,
 } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import colors from "../config/colors";
 import { Avatar } from "react-native-elements";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Text from "@kaloraat/react-native-text";
 import * as ImagePicker from "expo-image-picker";
 import { AuthContext } from "../context/authContext";
 import axios from "axios";
-import FooterTabs from "../components/nav/FooterTabs";
-import Screen from "../components/Screen";
 import SubmitButton from "../components/SubmitButton";
 import AppTextInput from "../components/auth/AppTextInput";
 import CircleLogo from "../components/appLogo/CircleLogo";
@@ -28,6 +27,7 @@ import moment from "moment";
 function HistoryScreen({ navigation }) {
   const [myOrders, setMyOrders] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     loadOrders();
@@ -36,14 +36,24 @@ function HistoryScreen({ navigation }) {
   const loadOrders = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get(`/orders/myorders`);
-      setMyOrders(data.orders);
+      const { data } = await axios.get(`/orders/ingredients/myorders`);
+      // console.log(data);
+      setMyOrders(data);
       setLoading(false);
     } catch (err) {
       console.log(err);
       setLoading(false);
     }
   };
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      loadOrders();
+      setRefreshing(false);
+    }, 2000);
+  };
+
   return (
     <View>
       {loading ? (
@@ -63,12 +73,18 @@ function HistoryScreen({ navigation }) {
               showsVerticalScrollIndicator={false}
               renderItem={({ item }) => (
                 <ListItem
-                  image={{ uri: item.food.image.url }}
-                  title={`${item.food.name}`}
-                  subTitle={`GHC ${item.food.price}.00`}
+                  // image={{ uri: item.image.url }}
+                  title="Order"
+                  // subTitle={`GHC ${item.food.price}.00`}
                   subSubTitle={`${moment(item.createdAt).fromNow()} `}
                   onPress={() =>
                     navigation.navigate("OrderDetailsScreen", item)
+                  }
+                  refreshControl={
+                    <RefreshControl
+                      refreshing={refreshing}
+                      onRefresh={onRefresh}
+                    />
                   }
                 />
               )}

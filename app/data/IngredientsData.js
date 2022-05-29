@@ -1,16 +1,16 @@
 export const dummyData = [
   {
-    name: "Anise Aroma Art Bazar",
-    url: "https://i.ibb.co/hYjK44F/anise-aroma-art-bazaar-277253.jpg",
+    name: "Okra Stew Ingredients",
+    url: "https://res.cloudinary.com/sky-tech/image/upload/v1648313108/didwa/images/okrastew_m5d86t.jpg",
     id: 1,
   },
   {
-    name: "Food inside a Bowl",
-    url: "https://i.ibb.co/JtS24qP/food-inside-bowl-1854037.jpg",
+    name: "Groundnut Soup Ingredients",
+    url: "https://res.cloudinary.com/sky-tech/image/upload/v1648313103/didwa/images/images_ynf7sw.jpg",
     id: 2,
   },
   {
-    name: "Vegatable Salad",
+    name: "TZ Soup Ingredients",
     url: "https://i.ibb.co/JxykVBt/flat-lay-photography-of-vegetable-salad-on-plate-1640777.jpg",
     id: 3,
   },

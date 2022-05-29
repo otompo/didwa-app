@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Image, ScrollView, Text } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Image,
+  ScrollView,
+  Text,
+  FlatList,
+} from "react-native";
 import AppText from "../components/AppText";
 import ListItem from "../components/ListItem";
 import colors from "../config/colors";
@@ -8,6 +15,7 @@ import SubmitButton from "../components/SubmitButton";
 import AppTextInput from "../components/auth/AppTextInput";
 import moment from "moment";
 import axios from "axios";
+import FormatCurrency from "../components/FormatCurrency";
 
 function OrderDetailsScreen({ route, navigation }) {
   const orders = route.params;
@@ -15,9 +23,9 @@ function OrderDetailsScreen({ route, navigation }) {
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    setAmount(qty * orders.food.price);
-  }, [qty, orders.food.price]);
+  // useEffect(() => {
+  //   setAmount(qty * orders.food.price);
+  // }, [qty, orders.food.price]);
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -52,70 +60,47 @@ function OrderDetailsScreen({ route, navigation }) {
 
   return (
     <View style={{ flex: 1 }}>
-      <Image style={styles.image} source={{ uri: orders.food.image.url }} />
-      <View style={styles.detailsContain}>
-        <AppText style={styles.title}>Order Details</AppText>
-        <AppText style={styles.price}>Name: {orders.food.name}</AppText>
-        <AppText style={styles.price}>
-          Price: <Text>GHC</Text> {orders.food.price}
-          <Text>.00</Text>
-        </AppText>
-        <AppText style={styles.price}>
-          Amount Paid: <Text>GHC</Text> {orders.amountToPaid}
-          <Text>.00</Text>
-        </AppText>
-        <AppText style={styles.price}>
-          <Text>Qty Ordered:</Text> {orders.qty}
-        </AppText>
-        <AppText style={styles.price}>
-          <Text>Time:</Text> {moment(orders.createdAt).fromNow()}
-        </AppText>
-        <Divider width={1} />
+      <View
+        style={{
+          height: 70,
+          justifyContent: "space-between",
+          marginVertical: 10,
+          marginHorizontal: 10,
+        }}
+      >
+        <Text style={styles.infoText}>
+          Service Charge:
+          <Text style={styles.subInfoText}>
+            {FormatCurrency(orders.serviceCharge)}
+          </Text>
+        </Text>
+        <Text style={styles.infoText}>
+          Transport Charge:
+          <Text style={styles.subInfoText}>
+            {FormatCurrency(orders.transportCharge)}
+          </Text>
+        </Text>
+        <Text style={styles.infoText}>
+          Grand Total:
+          <Text style={styles.subInfoText}>
+            {FormatCurrency(orders.grandTotal)}
+          </Text>
+        </Text>
       </View>
-      <ScrollView style={styles.Contain} showsVerticalScrollIndicator={false}>
-        <AppText
-          style={{ color: colors.black, fontSize: 20, marginHorizontal: 20 }}
-        >
-          You can place an order again...
-        </AppText>
-        <View>
-          <View style={{ flexDirection: "row" }}>
-            {/* <AppText style={styles.title}>Qty:</AppText> */}
-            <AppTextInput
-              autoCapitalize="none"
-              autoCorrect={false}
-              icon="pasta"
-              placeholder="Quantity..."
-              keyboardType="numeric"
-              value={qty}
-              setValue={setQty}
-            />
-          </View>
-          <View>
-            <Text style={{ color: colors.danger }}>
-              Amount to Pay: GHC {qty * orders.food.price}.00
-            </Text>
-          </View>
-          <SubmitButton
-            title="Order"
-            loading={loading}
-            onPress={handleSubmit}
-          />
-        </View>
-        <View style={styles.userContainer}>
+      <FlatList
+        data={orders.items}
+        showsVerticalScrollIndicator={false}
+        keyExtractor={(order) => order._id.toString()}
+        renderItem={({ item }) => (
           <ListItem
-            image={{ uri: orders.restaurant.featuredImage[0].url }}
-            title={`${orders.restaurant.name}`}
-            subTitle={`${orders.restaurant.location}`}
-            // onPress={() =>
-            //   console.log("RestaurantDetailsScreen", foods.restaurant)
-            // }
-            onPress={() =>
-              navigation.navigate("RestaurantDetailsScreen", orders.restaurant)
-            }
+            image={{ uri: item.image.url }}
+            title={item.name}
+            subTitle={FormatCurrency(item.amount)}
+            subSubTitle={item.extraInfo ? item.extraInfo : null}
+            icon=""
           />
-        </View>
-      </ScrollView>
+        )}
+      />
     </View>
   );
 }
@@ -152,5 +137,11 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(52, 52, 52, 0.5)",
     padding: 7,
     borderRadius: 10,
+  },
+  infoText: {
+    fontWeight: "bold",
+  },
+  subInfoText: {
+    color: colors.secoundary,
   },
 });
