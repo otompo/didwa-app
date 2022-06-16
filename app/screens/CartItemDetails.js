@@ -31,13 +31,13 @@ function CartItemDetails() {
   const navigation = useNavigation();
 
   const [amount, setAmount] = useState("");
-  const [serviceCharge, setServiceCharge] = useState(0);
-  const [transportCharge, setTransportCharge] = useState(0);
+  const [serviceCharge, setServiceCharge] = useState(7);
+  // const [transportCharge, setTransportCharge] = useState(0);
   const [grandTotal, setgGandTotal] = useState(0);
-
+  // console.log(amount);
   useEffect(() => {
-    setgGandTotal(serviceCharge + transportCharge + amount);
-  }, [serviceCharge, transportCharge]);
+    setgGandTotal(serviceCharge + amount);
+  }, [serviceCharge, amount]);
 
   useEffect(() => {
     const getTotalAmount = () => {
@@ -48,24 +48,24 @@ function CartItemDetails() {
       setAmount(res);
     };
 
-    const getServiceCharge = () => {
-      const res = cart.reduce((prev, item) => {
-        return prev + item.amount * 0.1;
-      }, 0);
+    // const getServiceCharge = () => {
+    //   const res = cart.reduce((prev, item) => {
+    //     return prev + item.amount * 0.059;
+    //   }, 0);
 
-      setServiceCharge(res);
-    };
+    //   setServiceCharge(res);
+    // };
 
-    const getTransportCharge = () => {
-      const res = cart.reduce((prev, item) => {
-        return prev + item.amount * 0.01;
-      }, 0);
+    // const getTransportCharge = () => {
+    //   const res = cart.reduce((prev, item) => {
+    //     return prev + item.amount * 0.01;
+    //   }, 0);
 
-      setTransportCharge(res);
-    };
+    //   setTransportCharge(res);
+    // };
     getTotalAmount();
-    getServiceCharge();
-    getTransportCharge();
+    // getServiceCharge();
+    // getTransportCharge();
   }, [cart]);
 
   const handleSubmit = async () => {
@@ -74,12 +74,14 @@ function CartItemDetails() {
       const { data } = await axios.post(`/orders/ingredients`, {
         cart,
         serviceCharge,
-        transportCharge,
+        // transportCharge,
         grandTotal,
       });
       setLoading(false);
       alert("Order placed success");
       dispatch({ type: "ADD_CART", payload: [] });
+      setgGandTotal(0);
+      setServiceCharge(0);
     } catch (err) {
       console.log(err);
       setLoading(false);
@@ -100,10 +102,14 @@ function CartItemDetails() {
               color: colors.secoundary,
             }}
           >
-            {FormatCurrency(Number(serviceCharge))}
+            {cart && cart.length === 0 ? (
+              <></>
+            ) : (
+              FormatCurrency(Number(serviceCharge))
+            )}
           </Text>
         </Text>
-        <Text
+        {/* <Text
           style={{ fontSize: 18, fontWeight: "normal", color: colors.dark }}
         >
           Transport Charge:{" "}
@@ -116,7 +122,7 @@ function CartItemDetails() {
           >
             {FormatCurrency(Number(transportCharge))}
           </Text>
-        </Text>
+        </Text> */}
         <Text
           style={{ fontSize: 18, fontWeight: "normal", color: colors.dark }}
         >
@@ -128,7 +134,11 @@ function CartItemDetails() {
               color: colors.secoundary,
             }}
           >
-            {FormatCurrency(Number(grandTotal))}
+            {cart && cart.length === 0 ? (
+              <></>
+            ) : (
+              FormatCurrency(Number(grandTotal))
+            )}
           </Text>
         </Text>
       </View>
@@ -144,7 +154,7 @@ function CartItemDetails() {
 
             <View>
               <Text style={{ fontSize: 16, color: colors.dark }}>
-                Shop for Items
+                Tap to Shop more Items
               </Text>
             </View>
           </TouchableOpacity>

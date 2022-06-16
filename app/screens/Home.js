@@ -304,6 +304,7 @@ function Home({ navigation }) {
                     />
                   )}
                 />
+
                 <Modal isVisible={isModalVisible}>
                   <View
                     style={{
@@ -525,20 +526,6 @@ const styles = StyleSheet.create({
   banner: {
     marginTop: 20,
   },
-
-  // mainContainer: {
-  //   flex: 1,
-  //   justifyContent: "space-between",
-  // },
-
-  // container: {
-  //   flex: 1,
-  //   flexDirection: "row",
-  //   justifyContent: "space-around", //replace with flex-end or center
-  //   marginVertical: 50,
-  //   marginHorizontal: 10,
-  //   flexWrap: "wrap",
-  // },
 
   MainContainer: {
     flex: 1,

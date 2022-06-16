@@ -1,2 +1,2 @@
 // export const API = "https://didwa-admin.vercel.app/api";
-export const API = "https://aa48-154-160-1-149.ngrok.io/api";
+export const API = "https://0bbe-197-251-240-46.ngrok.io/api";

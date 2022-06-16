@@ -114,7 +114,7 @@ function Signup({ navigation }) {
           textContentType="password"
           autoCompleteType="password"
         />
-        <View style={styles.buttonContainer}>
+        <View>
           <SubmitButton
             title="Sign up"
             onPress={handleSubmit}

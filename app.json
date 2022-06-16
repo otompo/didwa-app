@@ -2,7 +2,7 @@
   "expo": {
     "name": "Edwom",
     "slug": "edwom",
-    "version": "1.1",
+    "version": "1.2",
     "orientation": "portrait",
     "icon": "./app/assets/icon.png",
     "splash": {
@@ -19,7 +19,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.edwom.edwom",
-      "buildNumber": "1.1"
+      "buildNumber": "1.2"
     },
     "android": {
       "adaptiveIcon": {
@@ -28,7 +28,7 @@
       },
       "softwareKeyboardLayoutMode": "pan",
       "package": "com.edwom.edwom",
-      "versionCode": 2,
+      "versionCode": 4,
       "permissions" : []
     },
     "web": {

@@ -46,7 +46,7 @@ function FooterTabs() {
           handlePress={() => navigation.navigate("Home")}
         />
 
-        <Tabs
+        {/* <Tabs
           title="Restaurants"
           icon="silverware-variant"
           screenName="Restaurants"
@@ -57,11 +57,11 @@ function FooterTabs() {
           //     ? () => navigation.navigate("Restaurants")
           //     : () => navigation.navigate("Signin")
           // }
-        />
+        /> */}
 
         {/* <Badge value="3" status="error" containerStyle={styles.badgeStyle} /> */}
 
-        <Tabs
+        {/* <Tabs
           title="Market"
           icon="basket"
           screenName="Market"
@@ -71,7 +71,7 @@ function FooterTabs() {
               ? () => navigation.navigate("Market")
               : () => navigation.navigate("Signin")
           }
-        />
+        /> */}
 
         <Tabs
           title="Profile"
