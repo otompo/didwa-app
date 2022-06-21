@@ -63,21 +63,15 @@ function OrderDetailsScreen({ route, navigation }) {
       <View
         style={{
           height: 70,
-          justifyContent: "space-between",
-          marginVertical: 10,
-          marginHorizontal: 10,
+          // justifyContent: "space-between",
+          marginVertical: 15,
+          marginHorizontal: 15,
         }}
       >
         <Text style={styles.infoText}>
           Service Charge:
           <Text style={styles.subInfoText}>
             {FormatCurrency(orders.serviceCharge)}
-          </Text>
-        </Text>
-        <Text style={styles.infoText}>
-          Transport Charge:
-          <Text style={styles.subInfoText}>
-            {FormatCurrency(orders.transportCharge)}
           </Text>
         </Text>
         <Text style={styles.infoText}>
@@ -140,6 +134,7 @@ const styles = StyleSheet.create({
   },
   infoText: {
     fontWeight: "bold",
+    paddingBottom: 10,
   },
   subInfoText: {
     color: colors.secoundary,

@@ -14,9 +14,6 @@ function FoodCard({ onPress, name, image, thumbnailUrl }) {
       <View
         style={{
           marginHorizontal: 10,
-          // marginVertical: 10,
-          // marginLeft: 10,
-          // justifyContent: "center",
         }}
       >
         <Image
@@ -67,6 +64,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 3,
     elevation: 2,
+    backgroundColor: colors.secoundary,
   },
   gridStyle: {
     flex: 1,

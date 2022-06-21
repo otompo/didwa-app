@@ -14,18 +14,4 @@ export const dummyData = [
     uri: "https://i.ibb.co/JxykVBt/flat-lay-photography-of-vegetable-salad-on-plate-1640777.jpg",
     id: 3,
   },
-  // {
-  //   title: "Okra Stew",
-  //   uri: "https://i.picsum.photos/id/292/3852/2556.jpg?hmac=cPYEh0I48Xpek2DPFLxTBhlZnKVhQCJsbprR-Awl9lo",
-  //   description:
-  //     "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-  //   id: 4,
-  // },
-  // {
-  //   title: "Salmon Veggies Salad",
-  //   uri: "https://cdn.pixabay.com/photo/2014/11/05/15/57/salmon-518032_960_720.jpg",
-  //   description:
-  //     "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-  //   id: 5,
-  // },
 ];

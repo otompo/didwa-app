@@ -20,6 +20,8 @@ import FormatCurrency from "../components/FormatCurrency";
 import SubmitButton from "../components/SubmitButton";
 import axios from "axios";
 import { AuthContext } from "../context/authContext";
+import useServiceCharge from "../hooks/useServiceCharge";
+
 // AuthContext
 
 function CartItemDetails() {
@@ -31,12 +33,14 @@ function CartItemDetails() {
   const navigation = useNavigation();
 
   const [amount, setAmount] = useState("");
-  const [serviceCharge, setServiceCharge] = useState(7);
+
+  const { serviceCharge, setServiceCharge } = useServiceCharge();
   // const [transportCharge, setTransportCharge] = useState(0);
-  const [grandTotal, setgGandTotal] = useState(0);
-  // console.log(amount);
+  const [grandTotal, setGandTotal] = useState(0);
+  // console.log(serviceCharge);
+
   useEffect(() => {
-    setgGandTotal(serviceCharge + amount);
+    setGandTotal(serviceCharge + amount);
   }, [serviceCharge, amount]);
 
   useEffect(() => {
@@ -63,7 +67,9 @@ function CartItemDetails() {
 
     //   setTransportCharge(res);
     // };
+
     getTotalAmount();
+
     // getServiceCharge();
     // getTransportCharge();
   }, [cart]);
@@ -77,10 +83,11 @@ function CartItemDetails() {
         // transportCharge,
         grandTotal,
       });
+      // console.log(data);
       setLoading(false);
       alert("Order placed success");
       dispatch({ type: "ADD_CART", payload: [] });
-      setgGandTotal(0);
+      setGandTotal(0);
       setServiceCharge(0);
     } catch (err) {
       console.log(err);

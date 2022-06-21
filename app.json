@@ -28,7 +28,7 @@
       },
       "softwareKeyboardLayoutMode": "pan",
       "package": "com.edwom.edwom",
-      "versionCode": 4,
+      "versionCode": 6,
       "permissions" : []
     },
     "web": {

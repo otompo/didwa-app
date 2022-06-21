@@ -474,22 +474,7 @@ const styles = StyleSheet.create({
     // flex: 1,
     justifyContent: "flex-end",
   },
-  popularContainer: {
-    //   flex: 1,
-    width: 170,
-    height: 190,
-    borderRadius: 20,
-    // marginTop: 10,
-    backgroundColor: colors.light,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.27,
-    shadowRadius: 4.65,
-    elevation: 3,
-  },
+
   titleContainer: {
     position: "absolute",
     top: 65,
