@@ -15,8 +15,6 @@ function Signup({ navigation }) {
   const [cf_password, setCf_Password] = useState("");
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {}, []);
-
   const handleSubmit = async () => {
     setLoading(true);
     if (!email || !name || !password) {

@@ -10,21 +10,16 @@ import {
   RefreshControl,
   Keyboard,
   SafeAreaView,
-  TextInput,
-  Button,
 } from "react-native";
 import Menu from "../components/Menu";
 import FooterTabs from "../components/nav/FooterTabs";
 import Search from "../components/Search";
-import SpeedDial from "../components/SpeedDial";
 import colors from "../config/colors";
 import ProductCard from "../components/ProductCard";
 import FoodTopTitle from "../components/FoodTopTitle";
 import axios from "axios";
-import FrontBanner from "../components/FrontBanner";
 import ListItem from "../components/ListItem";
 import { FontAwesome } from "@expo/vector-icons";
-import { dummyData } from "../data/IngredientsData";
 import Modal from "react-native-modal";
 import CartInputText from "../components/CartInputText/CartInputText";
 import FormatCurrency from "../components/FormatCurrency";
@@ -37,11 +32,8 @@ import { useWindowDimensions } from "react-native";
 function Home({ navigation }) {
   const { stateData, dispatch } = useContext(CartContext);
   const { cart } = stateData;
-  // console.log("cart", cart);
-  const [ingredientsData, setIngredientsData] = useState([]);
   const [keyword, setKeyword] = useState("");
   const [success, setSuccess] = useState(false);
-  // const [showIcon, setShowIcon] = useState(false);
   const [foods, setFoods] = useState([]);
   const [products, setProducts] = useState([]);
   const [productsList, setProductsList] = useState([]);
@@ -52,7 +44,6 @@ function Home({ navigation }) {
   const [cartData, setCartData] = useState({});
   const [amount, setAmount] = useState("");
   const [extraInfo, setExtraInfo] = useState("");
-  // console.log(cartData);
   const { width } = useWindowDimensions();
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -65,7 +56,6 @@ function Home({ navigation }) {
     loadFoodsList();
     getCategories();
     loadFoodsCount();
-    setIngredientsData(dummyData);
   }, []);
   useEffect(() => {}, [cart]);
 
